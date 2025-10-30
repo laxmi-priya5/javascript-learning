@@ -230,7 +230,7 @@ promise resolved within async function
 // handlePromise();
 
 // here even though p2 resolve first still it waits for p1  just because of await
-//what the lines write after await in that async function all are gone to a microtask queue for later execution
+//what the lines write after await in that async function all are gone to  suspend for later execution
 //so  await p2 can't execute even though p2 resolved first
 
 //let's try this using .then approach
@@ -276,7 +276,7 @@ promise resolved within async function
 
 //that's why it print so...
 
-//in case of await when js capture an await js totally block all lines of that async function write  after that await .
+//in case of await when js capture an await js totally block all lines of that async function(suspend that function as long as promise is not resolved) write  after that await .
 //so it blocks the whole function for later execution and it also ignore another await  write inside that async function which is resolved first.
 //so to solve this problem we use await inside different async fynction and we find the same output as in .then().
 //and this is the big difference between promise using .then() vs await
@@ -305,4 +305,32 @@ async function handlePromise2(){
 }
 
 handlePromise();
-handlePromise2();  // irder of call doesn't matter
+handlePromise2();  // order of call doesn't matter
+
+//--------------------------------------------------------
+
+
+//.then().catch() vs async/await
+const pr = new Promise((resolve,reject)=>{
+    resolve("promise resolved")
+})
+
+// .then().catch() vs async/await
+pr.then(res=>{
+    console.log("promise resolved");
+})
+.catch(err=>{
+    console.log(err);
+})
+
+//async/await
+
+async function getData(){
+    try{
+       const data = await pr;
+       console.log(pr);
+    }
+    catch(err){
+        console.log(err);
+    }
+}

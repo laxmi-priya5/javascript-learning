@@ -65,7 +65,7 @@ Index 3: Value 4
 - Works only on arrays (not objects).
 - Does not return a new array (unlike .map()).
 
-  ## forEach vs map
+  ## forEach vs map method
   ### 🔎 Example with .forEach()
 const numbers = [1, 2, 3, 4];
 const result = numbers.forEach(num => num * 2);

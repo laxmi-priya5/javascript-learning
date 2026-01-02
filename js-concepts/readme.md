@@ -129,15 +129,15 @@ Output:
 
 3. Inside an Object Method
 - When a function is called as a property of an object, this refers to that object.
--
   ```
- const obj = {
-  name: "Laxmipriya",
-  greet() {
-    console.log(this.name); // "Laxmipriya"
-  }
- };
- obj.greet();```
+   const obj = {
+    name: "Laxmipriya",
+    greet() {
+      console.log(this.name); // "Laxmipriya"
+    }
+   };
+   obj.greet();
+  ```
 
 
 
@@ -155,7 +155,7 @@ Output:
 obj.greet();
 ```
 
-
+
 
 5. Explicit Binding
 - You can control this using:
@@ -244,7 +244,7 @@ const obj = {
 obj.arrow(); 
 // Logs `window` in non-strict mode (because `this` is inherited from the global scope, which is global object in non-strict mode).
 ```
-
+### 🔎 What’s Happening Here
 ```
 const obj2 = {
   a: 20,
@@ -260,7 +260,7 @@ obj2.x();
 ```
 
 
-🔎 What’s Happening Here
+
 1. Regular Function (x)
 - x is defined as a normal function inside obj2.
 - When you call obj2.x(), the function is invoked as a method of the object.

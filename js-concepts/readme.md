@@ -113,5 +113,272 @@ Output:
 
 
 
+# 🔍 How this Works in JavaScript
+1. Global Context
+- Non-strict mode:
+- In browsers → this points to the global object (window).
+- In Node.js → this points to the module.exports object, not the global object.
+- Strict mode:
+- this is undefined in the global scope.
+
+2. Inside a Function
+- Non-strict mode:
+- If a function is called normally (not as a method), this defaults to the global object.
+- Strict mode:
+- this remains undefined unless explicitly bound.
+
+3. Inside an Object Method
+- When a function is called as a property of an object, this refers to that object.
+-
+  ```
+ const obj = {
+  name: "Laxmipriya",
+  greet() {
+    console.log(this.name); // "Laxmipriya"
+  }
+ };
+ obj.greet();```
+
+
+
+
+4. Arrow Functions
+- Arrow functions do not have their own this.
+- They inherit this from their lexical scope (the surrounding context).
+ ``` 
+    const obj = {
+      name: "Laxmipriya",
+      greet: () => {
+        console.log(this.name); // undefined, because `this` is inherited from global
+      }
+    };
+obj.greet();
+```
+
+
+
+5. Explicit Binding
+- You can control this using:
+- call()
+- apply()
+- bind()
+
+ ## Difference Between x() and window.x()
+ ```
+ function x() {
+  console.log(this);
+}
+```
+1. Calling x()
+- When you declare function x(){} in the global scope (browser):
+- The function is hoisted into the global scope.
+- In non-strict mode, calling x() will log the global object (window in browsers).
+- In strict mode, calling x() will log undefined.
+
+2. Calling window.x()
+- Since x is defined globally, it becomes a property of the window object.
+- When you call window.x(), you’re explicitly invoking it as a method of the window object.
+- That means inside the function:
+- this will point to window (regardless of strict or non-strict mode, because the call is bound to the object).
+
+### In non‑strict mode, JavaScript performs what’s called this substitution:
+- If a function is called without an explicit receiver (like obj.method()), then this inside the function would normally be undefined.
+- But in non‑strict mode, JavaScript automatically substitutes that undefined with the global object (window in browsers, global in Node.js).
+That’s why:
+```
+function x() {
+  console.log(this);
+}
+```
+// Non-strict mode
+```
+x();        // logs window (browser)
+window.x(); // logs window
+```
+
+
+Whereas in strict mode:
+```
+'use strict';
+
+function x() {
+  console.log(this);
+}
+
+x();        // logs undefined
+window.x(); // logs window
+```
+
+## Arrow fnction
+1. No Own this
+- Arrow functions don’t create their own this.
+- Instead, they lexically inherit this from the surrounding scope (the context in which they were defined).
+
+### in strict
+```
+ 'use strict';
+
+const obj = {
+  name: "Priya",
+  arrow: () => {
+    console.log(this); 
+  }
+};
+
+obj.arrow(); 
+// Logs `undefined` in strict mode (because `this` is inherited from the global scope, which is undefined in strict mode).
+
+```
+
+### in non-strict
+```
+'use strict';
+
+const obj = {
+  name: "Priya",
+  arrow: () => {
+    console.log(this); 
+  }
+};
+
+obj.arrow(); 
+// Logs `window` in non-strict mode (because `this` is inherited from the global scope, which is global object in non-strict mode).
+```
+
+```
+const obj2 = {
+  a: 20,
+  x: function () {
+    console.log(this);
+    // const y = () => {
+    //   console.log(this);
+    // };
+    // y();
+  },
+};
+obj2.x();
+```
+
+
+🔎 What’s Happening Here
+1. Regular Function (x)
+- x is defined as a normal function inside obj2.
+- When you call obj2.x(), the function is invoked as a method of the object.
+- That means this inside x points to obj2.
+👉 Output:
+{ a: 20, x: f }
+
+
+
+2. Arrow Function (y)
+- If you uncomment y, notice it’s defined inside x.
+- Arrow functions don’t have their own this.
+- They inherit this from their lexical scope — in this case, the surrounding function x.
+- Since this inside x is obj2, the arrow function y will also log obj2.
+👉 Output (if uncommented):
+{ a: 20, x: f }
+
+## 🔎 this in DOM Event Handler
+
+1. Regular Function as Event Handler
+```
+<button id="btn">Click me</button>
+<script>
+  const btn = document.getElementById("btn");
+  btn.onclick = function () {
+    console.log(this);
+  };
+</script>
+```
+
+- Here, this refers to the DOM element that triggered the event (<button>).
+- So the output will be:
+<button id="btn">Click me</button>
+
+
+
+2. Arrow Function as Event Handler
+```
+<button id="btn">Click me</button>
+<script>
+  const btn = document.getElementById("btn");
+  btn.onclick = () => {
+    console.log(this);
+  };
+</script>
+```
+
+- Arrow functions don’t bind their own this.
+- They inherit this from the lexical scope (here, the global scope).
+- In strict mode, that’s undefined.
+- In non‑strict mode (browser), that’s window.
+👉 So instead of the button element, you’ll see undefined (strict) or window (non‑strict).
+
+3. Event Listener with addEventListener
+```
+btn.addEventListener("click", function () {
+  console.log(this); // the button element
+});
+```
+```
+btn.addEventListener("click", () => {
+  console.log(this); // lexical scope (undefined in strict mode)
+});
+```
+4. Inline onclick in HTML
+```
+<button onclick="console.log(this)">Click me</button>
+```
+
+Behavior:
+- Here, this refers to the element itself (<button>).
+- That’s because inline event attributes are executed in the scope of the element, and the browser automatically sets this to the element.
+👉 Output:
+<button onclick="console.log(this)">Click me</button>
+
+
+
+🔎 Inline onclick Calling a Function
+```
+<button onclick="sayHello()">Click me</button>
+
+<script>
+  function sayHello() {
+    console.log(this);
+  }
+</script>
+```
+
+Behavior:
+- In this case, the function sayHello is called without an object receiver(without calling like a method )
+- So:
+- Non‑strict mode → this inside sayHello is the global object (window).
+- Strict mode → this is undefined.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
